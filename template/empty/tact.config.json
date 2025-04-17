@@ -1,0 +1,17 @@
+{
+    "projects": [{
+        "name": "{{name}}",
+        "path": "./src/main.tact",
+        "output": "./output",
+        "mode": "full",
+        "options": {
+            "external": false,
+            "debug": false,
+            "ipfsAbiGetter": false,
+            "interfacesGetter": false,
+            "experimental": {
+                "inline": false
+            }
+        }
+    }]
+}

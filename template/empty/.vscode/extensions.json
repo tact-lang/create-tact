@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "tonstudio.vscode-tact",
+        "tonwhales.func-vscode",
+        "dbaeumer.vscode-eslint"
+    ]
+}
