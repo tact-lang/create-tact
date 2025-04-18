@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: ["**"]
   workflow_dispatch:
@@ -33,7 +35,7 @@ jobs:
         run: yarn build
 
       - name: Run Tact formatter
-        run: yarn tact-fmt --check ./sources
+        run: yarn fmt
 
       - name: Run Misti
         run: yarn misti --min-severity medium ./tact.config.json

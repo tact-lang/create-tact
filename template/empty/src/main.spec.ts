@@ -1,12 +1,12 @@
 import "@ton/test-utils";
 import { toNano } from "@ton/core";
 import { Blockchain } from "@ton/sandbox";
-import { Name } from "../output/{{name}}_Name";
+import { ContractName } from "../output/projectName_ContractName";
 
 it("should deploy correctly", async () => {
     const blockchain = await Blockchain.create();
 
-    const contract = blockchain.openContract(await Name.fromInit());
+    const contract = blockchain.openContract(await ContractName.fromInit());
 
     const deployer = await blockchain.treasury("deployer");
     

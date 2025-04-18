@@ -1,15 +1,15 @@
 import { resolve } from "path";
 import { readFile } from "fs/promises";
 import { contractAddress } from "@ton/core";
-import { Name } from "./output/{{name}}_Name";
 import { prepareTactDeployment } from "@tact-lang/deployer";
+import { ContractName } from "./output/projectName_ContractName";
 
 async function main() {
     console.log("Deploying...");
     const testnet = true;
-    const init = await Name.init();
+    const init = await ContractName.init();
     const prepare = await prepareTactDeployment({
-        pkg: await readFile(resolve(__dirname, "dist", "{{name}}_Name.pkg")),
+        pkg: await readFile(resolve(__dirname, "dist", "projectName_ContractName.pkg")),
         data: init.data.toBoc(),
         testnet,
     });

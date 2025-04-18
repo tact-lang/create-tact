@@ -1,6 +1,6 @@
 {
     "projects": [{
-        "name": "{{name}}",
+        "name": "projectName",
         "path": "./src/main.tact",
         "output": "./output",
         "mode": "full",
