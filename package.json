@@ -1,6 +1,6 @@
 {
   "name": "create-tact",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "bin": "bin/index.js",
   "scripts": {
     "build": "tsc"
