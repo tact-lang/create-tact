@@ -90,8 +90,8 @@ function detectPackageManager() {
 
     switch (pkgManager) {
         case 'yarn': return { name: 'yarn', install: 'yarn', run: 'yarn' } as const;
-        case 'pnpm': return { name: 'pnpm', install: 'pnpm install', run: 'pnpm exec' } as const;
-        case 'bun': return { name: 'bun', install: 'bun install', run: 'bun x' } as const;
+        case 'pnpm': return { name: 'pnpm', install: 'pnpm install', run: 'pnpm run' } as const;
+        case 'bun': return { name: 'bun', install: 'bun install', run: 'bun run' } as const;
         default: return { name: 'npm', install: 'npm install', run: 'npm run' } as const;
     }
 }
