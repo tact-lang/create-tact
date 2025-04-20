@@ -13,11 +13,11 @@ Creates Tact project from template
 Use `create` of your favorite package manager to run:
 
 ```shell
-npm create tact
+npm create tact@latest
 ```
 
 or
 
 ```shell
-yarn create tact
+yarn create tact@latest
 ```
