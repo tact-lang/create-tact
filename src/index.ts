@@ -100,9 +100,99 @@ const reservedTactWords = [
     "Int", "Bool", "Builder", "Slice", "Cell", "Address", "String", "StringBuilder",
 ];
 
-async function main(reader: Interface) {
-    const templateRoot = join(__dirname, "../template/empty");
+const templateNameRoots = {
+    "empty": join(__dirname, "../template/empty"),
+    "counter": join(__dirname, "../template/counter"),
+    // TODO: actual templates
+    "something...": join(__dirname, "../template/something"),
+};
 
+function templateChoicePrompt(
+    _: Interface,
+    options: Record<string, string>,
+): Promise<string> {
+    return new Promise(async (resolve) => {
+        const choices = Object.entries(options);
+        let currentIndex = 0;
+
+        const renderMenu = () => {
+            // TODO: double-buffer or something
+            console.clear();
+            console.log("Select a template:");
+            console.log();
+
+            choices.forEach(([key, _], index) => {
+                const prefix = index === currentIndex ? "› " : "  ";
+                const highlight = index === currentIndex ? "\x1b[36m" : "";
+                const reset = index === currentIndex ? "\x1b[0m" : "";
+                console.log(`${prefix}${highlight}${key}${reset}`);
+            });
+
+            console.log("\nUse ↓/j and ↑/k to move, Enter to select");
+        };
+
+        // NOTE: Idk how to apply this to reader: Interface,
+        //       considering that upon receiving an Enter everything is reset
+        stdin.setRawMode(true);
+        stdin.resume();
+
+        // Handle key presses
+        const keyHandler = (key: string) => {
+            // ↑/k
+            if (key === '\u001B[A' || key === '\u006B') {
+                currentIndex = (currentIndex > 0) ? currentIndex - 1 : choices.length - 1;
+                renderMenu();
+            // ↑/j
+            } else if (key === '\u001B[B' || key === '\u006A') {
+                currentIndex = (currentIndex < choices.length - 1) ? currentIndex + 1 : 0;
+                renderMenu();
+            // Enter
+            } else if (key === '\r') {
+                // NOTE: See the previous NOTE
+                stdin.removeListener('data', keyHandler);
+                stdin.setRawMode(false);
+                stdin.pause();
+                // We're guaranteed to have something selected, so `!.at(1)!` here is fine
+                resolve(choices[currentIndex]!.at(1)!);
+            // Ctrl+C
+            } else if (key === '\u0003') {
+                process.exit();
+            } else {
+                renderMenu();
+            }
+        };
+
+        stdin.on('data', (data) => {
+            const key = data.toString();
+
+            // Handle character sequences of the arrow keys
+            if (key === '\u001B') {
+                const buffer: string[] = [key];
+                const readNext = () => {
+                    stdin.once('data', (chunk) => {
+                        buffer.push(chunk.toString());
+                        if (buffer.join('') === '\u001B[') {
+                            stdin.once('data', (direction) => {
+                                buffer.push(direction.toString());
+                                keyHandler(buffer.join(''));
+                            });
+                        } else {
+                            keyHandler(buffer.join(''));
+                        }
+                    });
+                };
+
+                readNext();
+            } else {
+                keyHandler(key);
+            }
+        });
+
+        renderMenu();
+    });
+}
+
+async function main(reader: Interface) {
     const packageName = await reprompt(async () => {
         const placeholder = 'example';
         const fullPrompt = `Enter package name (${placeholder}): `;
@@ -148,9 +238,13 @@ async function main(reader: Interface) {
         return result;
     });
 
+    const templateRoot = await reprompt(async () => {
+        return await templateChoicePrompt(reader, templateNameRoots);
+    });
+
     const manager = detectPackageManager();
 
-    console.error("Creating project from template...");
+    console.error("Creating project from the template...");
     const files = await getFiles(templateRoot);
     for (const path of files) {
         const code = await readFile(path, "utf-8");
@@ -203,6 +297,7 @@ async function main(reader: Interface) {
 }
 
 async function withReader<T>(cb: (reader: Interface) => Promise<T>): Promise<T> {
+    stdin.setEncoding('utf8');
     const reader = createInterface({ input: stdin, output: stdout });
     try {
         return await cb(reader);
