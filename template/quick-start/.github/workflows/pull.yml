@@ -1,0 +1,50 @@
+name: CI
+
+on:
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["**"]
+    workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    test:
+        strategy:
+            fail-fast: false
+            matrix:
+                node-version: [22]
+                os: [ubuntu-latest]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            - name: Enable corepack
+              run: corepack enable
+
+            - name: Activate chosen package manager
+              run: corepack prepare --activate
+
+            - name: Install dependencies
+              run: pmInstall
+
+            - name: Build
+              run: pmRun build
+
+            - name: Run Tact formatter
+              run: pmRun fmt:check
+
+            - name: Run Misti
+              run: pmRun lint
+
+            - name: Run tests
+              run: pmRun test
