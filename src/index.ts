@@ -221,7 +221,7 @@ async function main(reader: Interface) {
         process.exit(31);
     }
 
-    if (cli.flags.skipDepsInstallation !== "false") {
+    if (cli.flags.skipDepsInstallation !== "true") {
         console.error("Installing dependencies...");
         if (!await runCommand(manager.install, targetRoot)) {
             process.exit(31);
