@@ -153,7 +153,7 @@ async function main(reader: Interface) {
             return;
         }
         return result;
-    }) : basename(process.cwd());
+    }) : basename(join(process.cwd(), outPath));
 
     const targetRoot = typeof outPath !== "undefined" ? join(process.cwd(), outPath) : join(process.cwd(), packageName);
 
