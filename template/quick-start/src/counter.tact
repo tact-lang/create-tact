@@ -74,6 +74,9 @@ contract Counter(
     }
 }
 
-// Defining a new message struct type, which has one field
-// and an automatically assigned 32-bit opcode prefix
+// Defining a new message struct type, which has no fields,
+// but it has an automatically assigned 32-bit opcode prefix.
 message Add {}
+
+// If you've got your grip on the Counter contract,
+// let's move to the second one: Open-ended Poll (poll.tact)
