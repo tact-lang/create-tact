@@ -16,3 +16,17 @@
 - `pmRun verifier:testnet` – deploy contract to testnet
 - `pmRun verifier:mainnet` – deploy contract to mainnet
 - `pmRun fmt:check` – check source code formatting (for CI)
+
+## Available CLIs
+
+- `tact` – Tact compiler
+- `tact-fmt` – Tact formatter
+- `unboc` – Disassembler
+- `@nowarp/misti` – Misti static analyzer
+- `jest` – Jest testing framework
+
+Use `npx` to run any of the CLIs available. For example, to invoke the Tact formatter, execute this:
+
+```shell
+npx tact-fmt
+```
