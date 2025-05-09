@@ -211,8 +211,13 @@ async function main(reader: Interface) {
         console.error("Git repository will not be initialized");
     }
 
+    const relDir = relative(process.cwd(), targetRoot);
     console.log("To switch to generated project, use");
-    console.log(`cd ${relative(process.cwd(), targetRoot)}`);
+    console.log(`cd ${relDir}`);
+
+    if (isQuickStart) {
+        console.log(`\n→ See the ${relDir}/README.md to get started!`);
+    }
 }
 
 async function withReader<T>(cb: (reader: Interface) => Promise<T>): Promise<T> {

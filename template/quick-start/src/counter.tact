@@ -42,10 +42,10 @@ contract Counter(
         cashback(sender());
     }
 
-    // Registers a binary receiver of the Add message bodies.
-    //
-    // Notice that we do not use the received body
-    // and it is discarded with a wildcard _
+    /// Registers a binary receiver of the Add message bodies.
+    ///
+    /// Notice that we do not use the received body
+    /// and it is discarded with a wildcard _
     receive(_: Add) {
         // Duh
         self.counter += 1;
@@ -74,9 +74,17 @@ contract Counter(
     }
 }
 
-// Defining a new message struct type, which has no fields,
-// but it has an automatically assigned 32-bit opcode prefix.
-message Add {}
+/// Defining a new message struct type,
+/// which has no fields and a manually assigned 32-bit opcode prefix.
+///
+/// The opcode goes before all message body fields and serves as a tag,
+/// helping contracts differentiate the message bodies and parse their subsequent
+/// contents in accordance to their message struct layouts.
+///
+/// In our case there are no fields after the opcode as the message struct is empty,
+/// but in the real-world contracts there are about 4-5 fields on average
+/// in each defined message struct.
+message(0x12345678) Add {}
 
 // If you've got your grip on the Counter contract,
 // let's move to the second one: Open-ended Poll (poll.tact)
