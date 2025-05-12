@@ -9,7 +9,7 @@
 
 ## How to use
 
-- `pmRun build` – build `.ts` API for contract
+- `pmRun build` – build contracts and the `.ts` wrappers
 - `pmRun test` – build contracts and run jest tests
 - `pmRun fmt` – fix source code formatting
 - `pmRun lint` – run semantic checks with `misti` linter

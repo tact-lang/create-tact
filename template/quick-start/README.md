@@ -25,11 +25,24 @@ If you're done with the setup, let's discuss the contents of this project.
 
 ## Project structure
 
-- `src/main.tact` – source code of contract
-- `src/main.spec.ts` – test suite
+Start exploring this project with a Counter contract. Once ready, move to the Poll or to any of the auxiliary files.
+
+- `src/counter.tact` — source code of the Counter contract
+- `src/counter.spec.ts` — test suite for it
+- `src/poll.tact` — source code of the Open-ended Poll contract
+- `src/poll.spec.ts` — test suite for it
 - `deploy.ts` – script for deploying the contracts
 - `tact.config.json` – compiler settings
 
+To add new contract files to the project, do:
+
+1. Create a new `src/my-new-contract.tact`
+2. Copy an existing test suite into the one for the new contract in `src/my-new-contract.spec.ts`, then adjust the contents to match the new contract
+3. If the contract is used directly and not deployed by other ones, then:
+  * Modify `deploy.ts`
+  * Modify `tact.config.json`
+
+To build, test or deploy contracts see the following commands.
 
 ## Commands
 

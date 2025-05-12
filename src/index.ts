@@ -212,11 +212,11 @@ async function main(reader: Interface) {
     }
 
     const relDir = relative(process.cwd(), targetRoot);
-    console.log("To switch to generated project, use");
-    console.log(`cd ${relDir}`);
+    console.log("\nTo switch to the generated project, use\n");
+    console.error(`  cd ${relDir}`);
 
     if (isQuickStart) {
-        console.log(`\n→ See the ${relDir}/README.md to get started!`);
+        console.log(`\nThen see the ${relDir}/README.md to get started!`);
     }
 }
 
