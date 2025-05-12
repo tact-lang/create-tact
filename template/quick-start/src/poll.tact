@@ -1,3 +1,8 @@
+/// The following contract is similar to a poll feature you've probably seen on many
+/// social media networks out there, except that now it works on the blockchain
+/// and is decentralized — anyone can deploy their own poll and count unique votes
+/// for some options. In this example, the poll only has 2 options to pick from.
+///
 /// The parent Poll contract deploys individual Voter contracts for each voter's Toncoin wallet.
 /// This approach for building contract systems is called "sharding", and it is very common on TON.
 /// Instead of attempting to make a single large contract process everything,
@@ -23,7 +28,7 @@ contract Poll(
         cashback(sender());
     }
 
-    /// Registers a binary receiver of the Vote message bodies.
+    /// Registers a binary receiver of the `Vote` message bodies.
     ///
     /// Notice that we do not use the received body
     /// and it is discarded with a wildcard _
@@ -55,9 +60,14 @@ contract Poll(
         });
     }
 
-    // TODO: Describe
-    //
-    // We've received it because...
+    /// This is a special receiver — it only handles the `Vote` message bodies
+    /// that have bounced back to this contract, which can only happen if this contract
+    /// has sent a message and there was an error during its processing on the recepients' side.
+    ///
+    /// In our case, the receiver of the regular `Vote` message bodies sends a deployment message
+    /// with the `Vote` body, processing of which can intentionally cause an error if the voter
+    /// has voted already. And that would mean we need to revert the excessive vote change
+    /// applied earlier in the previous receiver.
     bounced(msg: bounced<Vote>) {
         if (msg.option == 0) {
             self.option0 -= 1;
@@ -74,14 +84,31 @@ contract Poll(
     }
 }
 
+/// Child contract for each of the voter's Toncoin wallet.
+/// By creating an individual contract we circumvent the problem of the limited contract's state
+/// and effectively use the whole blockchain as a map of voters that did participate in a given poll.
+///
+/// These contracts are not deployed on their own and isn't listed as an entrypoint in tact.config.json.
+/// Instead, they are deployed by the parent Poll contract.
+///
+/// Since contract addresses on TON are determined on deployment from the initial code and data,
+/// it is crucial for the Voter contract to have some data that will be unique to each voter.
+/// That is why there is a seemingly unused `_origin` address stored in the contract's persistent state.
 contract Voter(
+    /// An address of the voter's Toncoin wallet.
     _origin: Address,
+
+    /// Address of the `Poll` contract this Voter will participate in.
     poll: Address,
+
+    /// Whether this voter voted already.
+    /// This field is needed to only process unique votes
+    /// and it should be set to true upon the deployment of this contract.
     hasVoted: Bool,
 ) {
-    /// Registers a binary receiver of the Vote message bodies.
+    /// Registers a binary receiver of the `Vote` message bodies.
     /// Since its the only defined receiver, it will be used for the deployment.
-    /// 
+    ///
     /// Notice that we do not use the received body
     /// and it is discarded with a wildcard _
     receive(_: Vote) {
@@ -91,10 +118,6 @@ contract Voter(
         );
         require(!self.hasVoted, "This voter has participated already");
         self.hasVoted = true;
-    }
-
-    get fun hasVoted(): Bool {
-        return self.hasVoted;
     }
 }
 
