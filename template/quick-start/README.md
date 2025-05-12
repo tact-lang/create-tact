@@ -78,6 +78,8 @@ npx tact-fmt
   - [Security best practices](https://docs.tact-lang.org/book/security-best-practices/)
 - [Awesome Tact](https://github.com/tact-lang/awesome-tact)
 
+For more interesting contract examples, see the [Tact's DeFi Cookbook](https://github.com/tact-lang/defi-cookbook).
+
 ## Community
 
 If you can’t find the answer in the [docs](https://docs.tact-lang.org), or you’ve tried to do some local testing and it still didn’t help — don’t hesitate to reach out to Tact’s flourishing community:
