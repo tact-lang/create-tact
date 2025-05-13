@@ -36,7 +36,7 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: (Windows) Setup and test templates
+      - name: (Windows, Yarn v1) Setup and test templates
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
           Set-Location template
@@ -45,11 +45,11 @@ jobs:
             yarn install
             yarn fmt:check
             yarn build
-            yarn test
+            yarn jest
             Pop-Location
           }
 
-      - name: (non-Windows) Setup and test templates
+      - name: (non-Windows, Yarn v1) Setup and test templates
         if: ${{ matrix.os != 'windows-latest' }}
         run: |
           cd template
@@ -58,6 +58,6 @@ jobs:
             yarn install
             yarn fmt:check
             yarn build
-            yarn test
+            yarn jest
             popd
           done
