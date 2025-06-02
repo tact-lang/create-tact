@@ -100,13 +100,13 @@ const reservedTactWords = [
     "Int", "Bool", "Builder", "Slice", "Cell", "Address", "String", "StringBuilder",
 ];
 
-async function main(reader: Interface) {
+async function main(reader: Interface, rawInputLines: string[]) {
     const templateRoot = join(__dirname, "../template/empty");
 
     const packageName = await reprompt(async () => {
         const placeholder = 'example';
         const fullPrompt = `Enter package name (${placeholder}): `;
-        const result = (await reader.question(fullPrompt)) || placeholder;
+        const result = rawInputLines.at(0) ?? ((await reader.question(fullPrompt)) || placeholder);
         const validPackageName = /^(?=.{1,214}$)(?:@[a-z0-9]+(?:[._-][a-z0-9]+)*\/)?[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
         if (!result.match(validPackageName)) {
             return;
@@ -140,7 +140,7 @@ async function main(reader: Interface) {
     const contractName = await reprompt(async () => {
         const placeholder = kebabToPascal(packageName);
         const fullPrompt = `Enter contract name (${placeholder}): `;
-        const result = (await reader.question(fullPrompt)) || placeholder;
+        const result = rawInputLines.at(1) ?? ((await reader.question(fullPrompt)) || placeholder);
         const validContractName = /[A-Z][a-zA-Z0-9_]*/;
         if (!result.match(validContractName) || reservedTactWords.includes(result)) {
             return;
@@ -202,12 +202,26 @@ async function main(reader: Interface) {
     console.log(`cd ${relative(process.cwd(), targetRoot)}`)
 }
 
-async function withReader<T>(cb: (reader: Interface) => Promise<T>): Promise<T> {
+async function withReader<T>(cb: (reader: Interface, rawInputLines: string[]) => Promise<T>): Promise<T> {
+    let inputBuffer = "";
+    if (!stdin.isTTY) {
+        await new Promise<void>(resolve => {
+            stdin.on("data", chunk => {
+                inputBuffer += chunk;
+            });
+            stdin.on("end", () => {
+                resolve();
+            });
+        });
+        inputBuffer = inputBuffer.trim();
+    }
     const reader = createInterface({ input: stdin, output: stdout });
     try {
-        return await cb(reader);
+        return await cb(reader, inputBuffer !== "" ? inputBuffer.split("\n") : []);
     } finally {
-        reader.close()
+        if (stdin.isTTY) {
+            reader.close();
+        }
     }
 }
 
