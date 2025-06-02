@@ -1,0 +1,41 @@
+{
+    "$schema": "http://raw.githubusercontent.com/tact-lang/tact/main/src/config/configSchema.json",
+    "projects": [
+        {
+            "name": "counter",
+            "path": "./src/counter.tact",
+            "output": "./output",
+            "mode": "full",
+            "options": {
+                "external": false,
+                "debug": true,
+                "ipfsAbiGetter": false,
+                "interfacesGetter": false,
+                "experimental": {
+                    "inline": false
+                },
+                "safety": {
+                    "nullChecks": true
+                },
+                "optimizations": {
+                    "internalExternalReceiversOutsideMethodsMap": false
+                }
+            }
+        },
+        {
+            "name": "poll",
+            "path": "./src/poll.tact",
+            "output": "./output",
+            "mode": "full",
+            "options": {
+                "external": false,
+                "debug": true,
+                "ipfsAbiGetter": false,
+                "interfacesGetter": false,
+                "experimental": {
+                    "inline": false
+                }
+            }
+        }
+    ]
+}
