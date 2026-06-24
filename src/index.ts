@@ -101,6 +101,9 @@ const reservedTactWords = [
 ];
 
 async function main(reader: Interface) {
+    printDeprecationNotice();
+    console.log();
+
     const templateRoot = join(__dirname, "../template/empty");
 
     const packageName = await reprompt(async () => {
@@ -198,8 +201,16 @@ async function main(reader: Interface) {
         console.error('Git repository will not be initialized');
     }
 
+    console.log();
+    printDeprecationNotice();
+    console.log();
     console.log('To switch to generated project, use');
     console.log(`cd ${relative(process.cwd(), targetRoot)}`)
+}
+
+function printDeprecationNotice() {
+    const bang = stdout.isTTY ? "\x1b[31m!\x1b[39m" : "!";
+    console.log(`${bang} Deprecated. Use https://ton-blockchain.github.io/acton/ instead.`);
 }
 
 async function withReader<T>(cb: (reader: Interface) => Promise<T>): Promise<T> {

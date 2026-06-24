@@ -1,5 +1,8 @@
 # create-tact
 
+> [!CAUTION]
+> Deprecated. Use [Acton](https://ton-blockchain.github.io/acton/) instead.
+
 Creates Tact project from template
 
 ## Prerequisites
