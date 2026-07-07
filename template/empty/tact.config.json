@@ -1,4 +1,5 @@
 {
+    "$schema": "http://raw.githubusercontent.com/tact-lang/tact/main/src/config/configSchema.json",
     "projects": [
         {
             "name": "projectName",
@@ -12,6 +13,12 @@
                 "interfacesGetter": false,
                 "experimental": {
                     "inline": false
+                },
+                "safety": {
+                    "nullChecks": true
+                },
+                "optimizations": {
+                    "internalExternalReceiversOutsideMethodsMap": false
                 }
             }
         }
